@@ -1,6 +1,7 @@
 let currentPlayer = 'X';
 let playerXScore = 0;
 let playerOScore = 0;
+let totalMoves = 0;
 let gameOver = false;
 
 const board = document.getElementById('board');
@@ -28,8 +29,15 @@ function createBoard() {
 function cellClicked(cell, index) {
   if (!gameOver && !cell.textContent) {
     cell.textContent = currentPlayer;
+    totalMoves++;
     checkWinner();
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    if (!gameOver) {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+    if (totalMoves === 9 && !gameOver) {
+      alert('Unentschieden!');
+      resetGame();
+    }
   }
 }
 
@@ -57,9 +65,20 @@ function checkWinner() {
         playerOScore++;
       }
       updateScore();
+      resetGame();
       break;
     }
   }
+}
+
+// Spiel zurücksetzen
+function resetGame() {
+  const cells = document.querySelectorAll('.cell');
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].textContent = '';
+  }
+  totalMoves = 0;
+  gameOver = false;
 }
 
 // Spielfeld erstellen, wenn die Seite geladen ist
